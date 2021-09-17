@@ -191,9 +191,9 @@ def options (user_input):
     
 def show_commands():
     print("Some basic things you can do here are as follows:")
-    print("'get wood' (gw), 'get stone' (gs), 'build' (b), 'save' (s), ")
-    print("'quit' (q), 'check stats' (cs), 'help' (h), 'get fiber' (gf), ")
-    print("'set trap' (st), and 'remove save' (rs).")
+    print("'get wood' (gw) \n'get stone' (gs)\n'build' (b)\n'save' (s)")
+    print("'quit' (q)\n'check stats' (cs)\n'help' (h)\n'get fiber' (gf)")
+    print("'set trap' (st)\n'remove save' (rs)")
     
 def check_stats():
     print("You have the following: ")
@@ -215,8 +215,7 @@ def save_game():
     save_dict = inventory.copy()
     save_dict["turns"] = turns
     save_dict["level"] = level
-    save_dict["health"] = health
-    #json.dump(save_dict, open(game_save_file, 'wb'))
+    save_dict["health"] = health 
     import json
     json = json.dumps(save_dict)
     f = open("game_save_file.json","w")
@@ -251,6 +250,7 @@ def remove_save_data():
     inventory = save_dict.copy()
     level = 0
     turns = 1
+    save_game()
     
 def play_unloaded_first_turn ():
     global turns
@@ -294,26 +294,42 @@ def play_next_turn():
     
 def check_for_night():
     global turns
-    if turns == 10 or turns == 20 or turns == 30 or turns == 40 or turns == 50:
+    if turns == 10 or turns == 20 or turns == 30 or turns == 40:
+        input("The sun sets and night begins. Hit enter to see how you fare.")
         night_sequence()
+    elif turns == 50:
+        print("The game has now ended. I hope you had fun playing!")
 
 def night_sequence():
-    print("Night falls upon your camp as you try to gain as much comfort as ")
-    print("possible from what you created that day.")
+    print("\nNight falls upon your camp as you try to gain as much comfort as ")
+    print("possible from what you created that day.\n")
     points = 5
     if "campfire" in inventory:
         print("You are warmed by your camfire as you snuggle into your sleeping bag.")
         points = points - 1
-    if "small_shelter" in inventory:
-        print("Your small shelter provides you a little break from the wind.")
-        points = points - 1
+    else:
+        print("The lack of a nearby campfire makes the cold and windy night even worse.")
     if "large_shelter" in inventory:
         print("You are completely surrounded by your sturdy shelter and feel no affects of the wind.")
         points = points - 3
+    elif "small_shelter" in inventory:
+        print("Your small shelter provides you a little break from the wind.")
+        points = points - 1
+    else:
+        print("You don't have any shelter to keep the elemnts off of you tonight.\nSleep is nearly impossible and you are left exhausted the next day")
     if "meat" in inventory:
         if inventory["meat"] >=2:
             print("You realize you were able to eat enough meals today to have as full of a belly as possible.")
             points = points - 2
+            if inventory["meat"] <=2 and inventory["meat"] > 0:
+                inventory["meat"] = 0
+            elif inventory["meat"] > 2:
+                inventory["meat"] = inventory["meat"] - 2
+        elif inventory["meat"] > 0:
+            points = points - 1
+            print("You were only able to eat half of what you really need to survive well today.\n This puts a bit of strain on your body")
+        else:
+            print("You didn't eat any food today and it takes a toll on your exhausted body.")
     global health
     health = health - points
     print("You realize, humorously, if this were a game you would only have " + str(health) + " health left.")
@@ -331,8 +347,8 @@ def main():
             else:
                 play_unloaded_first_turn()
         else:
-            check_for_night()
             play_next_turn()
+            check_for_night()
         
 if __name__ == "__main__":
     main()
