@@ -1,0 +1,3 @@
+hello	privet
+gibberish	abracadabra
+yes	da
