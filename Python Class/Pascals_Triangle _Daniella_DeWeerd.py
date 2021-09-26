@@ -7,10 +7,10 @@ Created on Fri Sep 17 00:54:11 2021
 
 class binomial_coefficients: # class to find binomial coeeficients using Pascal's rule
     def get_n(self,n): # find row
-        global row #create list to contain row that can be used in other methods
+        global row #create list to contain row that can be used in other functions
         row = [] #initialize empty row list
         num_of_k = n + 1 #figure out how many times k will have to be found
-        for k in range(num_of_k): #run the method to find k that many times
+        for k in range(num_of_k): #run the function to find k that many times
             number = self.get_nk(n, k) #find k in the n,k position
             row.append(number) #add result to row list
         return row
